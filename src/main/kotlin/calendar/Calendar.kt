@@ -2,19 +2,17 @@ package calendar
 
 import java.util.*
 
-
-
 class Calendar(_rawCalendar: MutableList<Array<String>>, _bounds: Array<String>) {
-    private var rawCalendar: MutableList<Array<String>> = _rawCalendar
-    private var bounds: Array<String> = _bounds
-    private var calendar: List<Array<Int>> = formatInput()
+    private val rawCalendar: MutableList<Array<String>> = _rawCalendar
+    private val bounds: Array<String> = _bounds
+    private val calendar: List<Array<Int>> = formatInput()
 
     constructor(rawCalendar: String, bounds: String) : this(getTime(rawCalendar), getTime(bounds)[0])
 
     companion object {
     fun getTime(stringTime: String): MutableList<Array<String>> {
         val result : MutableList<Array<String>> = mutableListOf()
-        for (time_frame in stringTime.split(",").toTypedArray()) {
+        for (time_frame in stringTime.split(",")) {
             result.add(time_frame.split("-").toTypedArray())
         }
         return result
@@ -37,11 +35,7 @@ class Calendar(_rawCalendar: MutableList<Array<String>>, _bounds: Array<String>)
     }
 
     override fun hashCode(): Int {
-        return Objects.hash(this.toString())
-    }
-
-    override fun toString(): String {
-        return rawCalendar.toTypedArray().contentDeepToString() + " / " + bounds.contentToString()
+        return Objects.hash(this.getCalendar())
     }
 
     fun getCalendar(): String {
@@ -51,9 +45,13 @@ class Calendar(_rawCalendar: MutableList<Array<String>>, _bounds: Array<String>)
     fun mergeWithCalendar(cal2: Calendar) : Calendar{
         val newCalendar: MutableList<Array<String>> = rawCalendar
         newCalendar.addAll(cal2.rawCalendar)
-        val newBounds = arrayOf(comp(bounds[0], cal2.bounds[0], 1), comp(bounds[1], cal2.bounds[1], -1))
         newCalendar.sortBy{ o: Array<String> -> o[0] }
+        val newBounds = arrayOf(comp(bounds[0], cal2.bounds[0],1), comp(bounds[1], cal2.bounds[1],-1))
         return Calendar(newCalendar, newBounds)
+    }
+
+    private fun fi(value : String): Int {
+        return value.split(":")[0].toInt()*60 + value.split(":")[1].toInt()
     }
 
     private fun formatInput(): List<Array<Int>> {
@@ -63,24 +61,16 @@ class Calendar(_rawCalendar: MutableList<Array<String>>, _bounds: Array<String>)
         calendar.addAll(rawCalendar)
         calendar.add(arrayOf(bounds[1], "00:00"))
         for (s in calendar) {
-            val timeFrom = s[0].split(":").toTypedArray()
-            val timeTo = s[1].split(":").toTypedArray()
-            result.add(arrayOf(timeFrom[0].toInt() * 60 + timeFrom[1].toInt(), timeTo[0].toInt() * 60 + timeTo[1].toInt()))
+            result.add(arrayOf(fi(s[0]), fi(s[1])))
         }
         return result
     }
 
-    fun getFreeTime(): List<Array<Int>> {
-        return getFreeTime(30)
-    }
-
-    private fun getFreeTime(minDuration: Int): List<Array<Int>> {
+    fun getFreeTime(minDuration: Int = 30): List<Array<Int>> {
         val result: MutableList<Array<Int>> = ArrayList()
         for (i in 0 until calendar.size - 1) {
-            val event = calendar[i]
-            val nextEvent = calendar[i + 1]
-            if (nextEvent[0] - event[1] >= minDuration) {
-                result.add(arrayOf(event[1], nextEvent[0]))
+            if (calendar[i + 1][0] - calendar[i][1] >= minDuration) {
+                result.add(arrayOf(calendar[i][1], calendar[i + 1][0]))
             }
         }
         return result
@@ -90,19 +80,12 @@ class Calendar(_rawCalendar: MutableList<Array<String>>, _bounds: Array<String>)
         return mergeWithCalendar(cal2).getFreeTime(minDuration)
     }
 
-    fun getPrettyTime(): String {
-        return getPrettyTime(30)
-    }
-
-    fun getPrettyTime(minDuration: Int): String {
+    fun getPrettyTime(minDuration: Int = 30): String {
         val result: MutableList<Array<String>> = ArrayList()
         for (i in getFreeTime(minDuration)) {
             result.add(
-                arrayOf(
-                    formatTime(i[0] / 60) + ':' + formatTime(i[0] % 60),
-                    formatTime(i[1] / 60) + ':' + formatTime(i[1] % 60)
-                )
-            )
+                arrayOf("${formatTime(i[0] / 60)}:${formatTime(i[0] % 60)}",
+                    "${formatTime(i[1] / 60)}:${formatTime(i[1] % 60)}"))
         }
         return result.toTypedArray().contentDeepToString()
     }
