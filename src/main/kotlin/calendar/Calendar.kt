@@ -11,12 +11,12 @@ class Calendar(_rawCalendar: MutableList<Array<String>>, _bounds: Array<String>)
 
     companion object {
     fun getTime(stringTime: String): MutableList<Array<String>> {
-        val result : MutableList<Array<String>> = mutableListOf()
-        for (time_frame in stringTime.split(",")) {
-            result.add(time_frame.split("-").toTypedArray())
-        }
-        return result
-    } }
+        return object : ArrayList<Array<String>>() {
+            init {
+                for (time_frame in stringTime.split(",")) {
+                    add(time_frame.split("-").toTypedArray())
+                } } } } }
+
 
     private fun formatTime(time: Int): String {
         val timeString = time.toString()
@@ -56,15 +56,14 @@ class Calendar(_rawCalendar: MutableList<Array<String>>, _bounds: Array<String>)
 
     private fun formatInput(): List<Array<Int>> {
         val calendar: MutableList<Array<String>> = ArrayList()
-        val result: MutableList<Array<Int>> = ArrayList()
         calendar.add(arrayOf("00:00", bounds[0]))
         calendar.addAll(rawCalendar)
         calendar.add(arrayOf(bounds[1], "00:00"))
-        for (s in calendar) {
-            result.add(arrayOf(fi(s[0]), fi(s[1])))
-        }
-        return result
-    }
+        return object : ArrayList<Array<Int>>() {
+            init {
+                for (s in calendar) {
+                    add(arrayOf(fi(s[0]), fi(s[1])))
+                } } } }
 
     fun getFreeTime(minDuration: Int = 30): List<Array<Int>> {
         val result: MutableList<Array<Int>> = ArrayList()
