@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class CalendarTest {
-    private var calendar1: Calendar = Calendar(
+    private var calendarFromArray: Calendar = Calendar(
         listOf(arrayOf("09:00", "10:30"), arrayOf("12:00", "13:00"), arrayOf("16:00", "18:00")) as MutableList<Array<String>>, arrayOf("09:00", "20:00"))
     private var calendar2: Calendar = Calendar("09:00-10:30,12:00-13:00,16:00-18:00", "09:00-20:00")
     private var calendar3: Calendar = Calendar("12:00-13:00,16:00-18:00", "09:00-20:00")
@@ -15,18 +15,18 @@ class CalendarTest {
     @Test
     fun test_getCalendar() {
         val result = "[[0, 540], [540, 630], [720, 780], [960, 1080], [1200, 0]]"
-        assertEquals(result, calendar1.getCalendar(), "Not equal")
+        assertEquals(result, calendarFromArray.getCalendar(), "Not equal")
     }
 
     @Test
     fun test_calendarCreation() {
-        assertEquals(calendar1.getCalendar(), calendar2.getCalendar(), "Not equal")
+        assertEquals(calendarFromArray.getCalendar(), calendar2.getCalendar(), "Not equal")
     }
 
     @Test
     fun test_calendarEquality() {
-        assertEquals(calendar2, calendar1, "Not equal")
-        assertEquals(calendar1.getCalendar(), calendar2.getCalendar(), "Not equal")
+        assertEquals(calendar2, calendarFromArray, "Not equal")
+        assertEquals(calendarFromArray.getCalendar(), calendar2.getCalendar(), "Not equal")
     }
 
     @Test
@@ -46,24 +46,19 @@ class CalendarTest {
     fun test_calendarGetFreeTimeWithParam() {
         val cal1 = Calendar("09:00-10:30,11:00-13:00,16:00-18:00", "09:00-20:00")
         assertEquals(
-            cal1.getPrettyTime(),
-            "[[10:30, 11:00], [13:00, 16:00], [18:00, 20:00]]", "Not equal"
+            "[[10:30, 11:00], [13:00, 16:00], [18:00, 20:00]]", cal1.getPrettyTime(),"Not equal"
         )
         assertEquals(
-            cal1.getPrettyTime(30),
-            "[[10:30, 11:00], [13:00, 16:00], [18:00, 20:00]]", "Not equal"
+            "[[10:30, 11:00], [13:00, 16:00], [18:00, 20:00]]", cal1.getPrettyTime(30),"Not equal"
         )
         assertEquals(
-            cal1.getPrettyTime(60),
-            "[[13:00, 16:00], [18:00, 20:00]]", "Not equal"
+            "[[13:00, 16:00], [18:00, 20:00]]", cal1.getPrettyTime(60),"Not equal"
         )
         assertEquals(
-            cal1.getPrettyTime(121),
-            "[[13:00, 16:00]]", "Not equal"
+            "[[13:00, 16:00]]", cal1.getPrettyTime(121),"Not equal"
         )
         assertEquals(
-            cal1.getPrettyTime(181),
-            "[]", "Not equal"
+            "[]", cal1.getPrettyTime(181),"Not equal"
         )
     }
 
