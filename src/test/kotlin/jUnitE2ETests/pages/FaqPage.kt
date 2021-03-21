@@ -6,9 +6,12 @@ import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
 
-open class FaqPage(driver: WebDriver) : BoardGameBasePage(driver) {
-    init {
-        root = "https://www.boardgamegeek.com/wiki/page/BoardGameGeek_FAQ"
+open class FaqPage(driver: WebDriver) : MainPage(driver) {
+    override var root = "https://www.boardgamegeek.com/wiki/page/BoardGameGeek_FAQ"
+
+    override fun visit(): FaqPage {
+        driver.get(root)
+        return this
     }
 
     @FindBy(id = "wiki-search")

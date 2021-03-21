@@ -1,10 +1,11 @@
 package jUnitE2ETests.pages
 
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 import org.openqa.selenium.support.FindBy
 
-class SignInPage(driver: WebDriver) : BasePage(driver) {
+class SignInPage(driver: WebDriver) : AbstractPage(driver) {
 
     @FindBy(xpath = "//form[@name='loginform']")
     protected lateinit var loginForm: WebElement
@@ -20,15 +21,18 @@ class SignInPage(driver: WebDriver) : BasePage(driver) {
         this.password.sendKeys(password)
     }
 
-    fun isDisplayed(): Boolean {
-        return loginForm.isDisplayed
+    fun isDisplayed(): SignInPage {
+        assertTrue(loginForm.isDisplayed)
+        return this
     }
 
-    fun usernameDisplayed(): Boolean {
-        return username.isDisplayed
+    fun usernameDisplayed(): SignInPage {
+        assertTrue(username.isDisplayed)
+        return this
     }
 
-    fun passwordDisplayed(): Boolean {
-        return password.isDisplayed
+    fun passwordDisplayed(): SignInPage {
+        assertTrue(password.isDisplayed)
+        return this
     }
 }

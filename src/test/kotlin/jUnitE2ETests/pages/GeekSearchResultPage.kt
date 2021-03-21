@@ -4,7 +4,7 @@ import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
 
-class GeekSearchResultPage(driver: WebDriver) : BoardGameBasePage(driver) {
+class GeekSearchResultPage(driver: WebDriver) : MainPage(driver) {
     fun getGameLink(input: String?): List<WebElement> {
         return driver.findElements(By.linkText(input))
     }

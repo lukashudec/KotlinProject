@@ -2,9 +2,7 @@ package calendar
 
 import java.util.*
 
-class Calendar(_rawCalendar: MutableList<Array<String>>, _bounds: Array<String>) {
-    private val rawCalendar: MutableList<Array<String>> = _rawCalendar
-    private val bounds: Array<String> = _bounds
+class Calendar(private val rawCalendar: MutableList<Array<String>>, private val bounds: Array<String>) {
     private val calendar: List<Array<Int>> = formatInput()
 
     constructor(rawCalendar: String, bounds: String) : this(getTime(rawCalendar), getTime(bounds)[0])
@@ -13,8 +11,8 @@ class Calendar(_rawCalendar: MutableList<Array<String>>, _bounds: Array<String>)
     fun getTime(stringTime: String): MutableList<Array<String>> {
         return object : ArrayList<Array<String>>() {
             init {
-                for (time_frame in stringTime.split(",")) {
-                    add(time_frame.split("-").toTypedArray())
+                stringTime.split(",").forEach {
+                    add(it.split("-").toTypedArray())
                 } } } } }
 
 
@@ -61,8 +59,8 @@ class Calendar(_rawCalendar: MutableList<Array<String>>, _bounds: Array<String>)
         calendar.add(arrayOf(bounds[1], "00:00"))
         return object : ArrayList<Array<Int>>() {
             init {
-                for (s in calendar) {
-                    add(arrayOf(fi(s[0]), fi(s[1])))
+                calendar.forEach {
+                    add(arrayOf(fi(it[0]), fi(it[1])))
                 } } } }
 
     fun getFreeTime(minDuration: Int = 30): List<Array<Int>> {
@@ -81,10 +79,10 @@ class Calendar(_rawCalendar: MutableList<Array<String>>, _bounds: Array<String>)
 
     fun getPrettyTime(minDuration: Int = 30): String {
         val result: MutableList<Array<String>> = ArrayList()
-        for (i in getFreeTime(minDuration)) {
+        getFreeTime(minDuration).forEach {
             result.add(
-                arrayOf("${formatTime(i[0] / 60)}:${formatTime(i[0] % 60)}",
-                    "${formatTime(i[1] / 60)}:${formatTime(i[1] % 60)}"))
+                arrayOf("${formatTime(it[0] / 60)}:${formatTime(it[0] % 60)}",
+                    "${formatTime(it[1] / 60)}:${formatTime(it[1] % 60)}"))
         }
         return result.toTypedArray().contentDeepToString()
     }

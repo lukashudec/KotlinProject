@@ -1,10 +1,6 @@
 package jUnitE2ETests
 
-
-import jUnitE2ETests.pages.FaqPage
-import jUnitE2ETests.pages.GeekSearchResultPage
-import jUnitE2ETests.pages.MainPage
-import jUnitE2ETests.pages.SignInPage
+import jUnitE2ETests.pages.*
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -41,8 +37,8 @@ class E2ETest {
     When I enter search term: Prophecy
     Then Search results for link: Prophecy should appear
     And Search results for image: Prophecy should appear */
-        val mainPage: MainPage = MainPage(driver).go() as MainPage
-        val searchResultPage: GeekSearchResultPage = mainPage.searchGames("Prophecy")
+        val mainPage = MainPage(driver).visit()
+        val searchResultPage = mainPage.searchGames("Prophecy")
         assertNotEquals(0, searchResultPage.getGameImage("Prophecy").size)
         assertNotEquals(0, searchResultPage.getGameLink("Prophecy").size)
     }
@@ -55,15 +51,14 @@ class E2ETest {
     Then popup is shown
     And it contains field username
     And it contains field password
-    When I enter name and pass
-    Then nothing */
-        val mainPage: MainPage = MainPage(driver).go() as MainPage
-        val signPage: SignInPage = mainPage.clickOnSignIn()
-        assertTrue(signPage.isDisplayed())
-        assertTrue(signPage.passwordDisplayed())
-        assertTrue(signPage.usernameDisplayed())
-        signPage.signIn("name", "pass")
-        assertTrue(true)
+    When I enter name and pass */
+        MainPage(driver)
+            .visit()
+            .clickOnSignIn()
+            .isDisplayed()
+            .passwordDisplayed()
+            .usernameDisplayed()
+            .signIn("name", "pass")
     }
 
     @Test
@@ -74,7 +69,7 @@ class E2ETest {
     And BoardGameGeek FAQ article is present
     When I search for API
     Then List of results with BGG_XML_API2 is shown */
-        val faqPage: FaqPage = FaqPage(driver).go() as FaqPage
+        val faqPage = FaqPage(driver).visit()
         assertTrue(faqPage.searchDisplayed())
         assertTrue(faqPage.articleDisplayed())
         faqPage.search("API")
